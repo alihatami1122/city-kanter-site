@@ -460,18 +460,40 @@ img {
   border-radius: 10px;
   cursor: pointer;
 }
-/* حالت موبایل */
+/* ----------------- باکس محصولات دسکتاپ ----------------- */
+#divar-products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* فاصله بین باکس‌ها در دسکتاپ */
+  justify-content: flex-start;
+}
+
+#divar-products > div {
+  flex: 0 0 200px; /* عرض ثابت باکس‌ها، اندازه دلخواه دسکتاپ */
+  max-width: 200px;
+}
+
+/* ----------------- موبایل متوسط و بزرگ ----------------- */
 @media (max-width: 768px) {
   #divar-products {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start; /* برای چپ به راست بودن */
-    gap: 10px; /* فاصله بین باکس‌ها */
+    gap: 10px; /* فاصله بین باکس‌ها در موبایل */
   }
 
   #divar-products > div {
-    flex: 0 0 calc(50% - 5px); /* دو تا در هر ردیف، عرض ثابت */
-    max-width: calc(50% - 5px); /* جلوگیری از بزرگ شدن باکس */
+    flex: 0 0 calc(50% - 5px); /* دو تا در هر ردیف */
+    max-width: calc(50% - 5px);
+  }
+}
+
+/* ----------------- موبایل خیلی کوچک ----------------- */
+@media (max-width: 480px) {
+  #divar-products {
+    gap: 8px; /* فاصله کمی کمتر برای موبایل کوچک */
+  }
+
+  #divar-products > div {
+    flex: 0 0 calc(50% - 4px); /* حفظ دو تا در هر ردیف */
+    max-width: calc(50% - 4px);
   }
 }
 
