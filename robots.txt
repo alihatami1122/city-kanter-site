@@ -1,0 +1,31 @@
+# ==============================
+# robots.txt پیشرفته برای Sama Sanat
+# بهینه شده برای گوگل و موتورهای جستجو
+# ==============================
+
+# اجازه دسترسی به همه ربات‌ها
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Disallow: /cgi-bin/
+Disallow: /temp/
+Disallow: /*.php$
+Disallow: /*?*
+
+# اجازه ایندکس صفحات عمومی و محصولات
+Allow: / 
+Allow: /#home
+Allow: /#products
+Allow: /#about
+Allow: /#contact
+Allow: /#footer-map
+
+# مسیر فایل سایت‌مپ
+Sitemap: https://alihatami1122.github.io/city-kanter-site/sitemap.xml
+
+# ==============================
+# نکات حرفه‌ای:
+# - مسیرهای حساسی که نباید ایندکس شوند مسدود شدند
+# - تمام بخش‌های مهم سایت Allow شده تا سریع ایندکس شوند
+# - Sitemap مشخص است برای ایندکس سریع‌تر
+# ==============================
