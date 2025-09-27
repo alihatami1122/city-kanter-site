@@ -1,0 +1,7 @@
+# فعال کردن بازنویسی به HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# فعال کردن HSTS
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"

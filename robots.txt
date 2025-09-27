@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alihatami1122.github.io/city-kanter-site/sitemap.xml
