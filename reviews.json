@@ -1,0 +1,144 @@
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "کانتر چوبی مدل کلاسیک",
+  "image": "https://cdn.imgurl.ir/uploads/q92056_asal1_1.jpg",
+  "description": "کانتر چوبی با رنگ پلی‌استر و طراحی منحصر به فرد، مناسب برای دکوراسیون داخلی.",
+  "brand": {
+    "@type": "Brand",
+    "name": "سما صنعت"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "https://alihatami1122.github.io/city-kanter-site/",
+    "priceCurrency": "IRR",
+    "price": "45000000",
+    "priceValidUntil": "2075-09-20",
+    "availability": "https://schema.org/InStock",
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "100000",
+        "currency": "IRR"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": {
+          "@type": "Country",
+          "name": "IR"
+        }
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 2,
+          "unitCode": "d"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 3,
+          "maxValue": 5,
+          "unitCode": "d"
+        }
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": "IR",
+      "returnPolicyCategory": "MERCHANT_RETURN_POLICY",
+      "merchantReturnDays": 7,
+      "returnFees": "FREE_RETURN",
+      "returnMethod": "https://schema.org/ReturnByMail",
+      "returnPolicySeasonalOverride": false
+    }
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.6",
+    "reviewCount": "5",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "review": [
+    {
+      "@type": "Review",
+      "author": { "@type": "Person", "name": "محمد رضایی" },
+      "datePublished": "2025-09-15",
+      "reviewBody": "کیفیت چوب و رنگ خیلی خوبه، بسیار مقاوم و زیباست.",
+      "name": "رضایت کامل از محصول",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    },
+    {
+      "@type": "Review",
+      "author": { "@type": "Person", "name": "لیلا احمدی" },
+      "datePublished": "2025-09-18",
+      "reviewBody": "طراحی زیبا و مناسب دکور خانه من بود، ارزش خرید دارد.",
+      "name": "زیبا و باکیفیت",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "4",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    },
+    {
+      "@type": "Review",
+      "author": { "@type": "Person", "name": "سارا موسوی" },
+      "datePublished": "2025-09-19",
+      "reviewBody": "مناسب برای دکوراسیون‌های مدرن و کلاسیک، رنگ خیلی عالی است.",
+      "name": "مناسب و باکیفیت",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    },
+    {
+      "@type": "Review",
+      "author": { "@type": "Person", "name": "علی حسینی" },
+      "datePublished": "2025-09-20",
+      "reviewBody": "ابعاد استاندارد و جنس چوب عالی، توصیه می‌کنم.",
+      "name": "ابعاد و کیفیت عالی",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    },
+    {
+      "@type": "Review",
+      "author": { "@type": "Person", "name": "مریم کاظمی" },
+      "datePublished": "2025-09-20",
+      "reviewBody": "یک محصول عالی برای خانه و محل کار، خوشحالم که خریدم.",
+      "name": "خرید رضایت‌بخش",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "4",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+  ],
+  "manufacturer": {
+    "@type": "Organization",
+    "name": "سما صنعت",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+989029191722",
+      "contactType": "Customer Service",
+      "areaServed": "IR",
+      "availableLanguage": "fa"
+    },
+    "sameAs": "https://alihatami1122.github.io/city-kanter-site/"
+  }
+}

@@ -1,0 +1,5 @@
+<meta> tags
+<link rel="sitemap">
+<link rel="canonical">
+JSON-LD
+CSS/JS links

@@ -1,0 +1,14 @@
+# فعال کردن بازنویسی و مسیرها
+RewriteEngine On
+
+# Redirect کل سایت بدون www و HTTP به https://www
+RewriteCond %{HTTP_HOST} !^www\. [OR]
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://www.contersity.ir/$1 [R=301,L]
+
+# Redirect صفحه سئو میز منشی به صفحه اصلی
+RewriteCond %{REQUEST_URI} ^/صفحه-سئو-میز-منشی/?$ [NC]
+RewriteRule ^ https://www.contersity.ir/ [L,R=301]
+
+# فعال کردن HSTS برای امنیت بیشتر
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
