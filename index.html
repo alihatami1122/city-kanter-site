@@ -326,7 +326,7 @@
                     <div style="background: #fff; padding: 0.5rem; border-radius: 8px; margin-bottom: 1rem;">
                         <span style="font-weight: bold; color: #000; font-size: 1.2rem;">Wayfair</span>
                     </div>
-                    <img src="	https://s3-eu-west-1.amazonaws.com/tpd/logos/4ebe99420000640005118283/0x0.png" 
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Wayfair_logo.svg/200px-Wayfair_logo.svg.png" 
                          alt="Wayfair Logo" 
                          style="width: 100px; height: 30px; object-fit: contain;">
                 </div>
@@ -462,8 +462,9 @@
 <div id="raffle-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center;">
   <div style="background: #1a1a1a; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; border: 2px solid #f4b400; margin: 1rem;">
     <h2 style="color: #f4b400; margin-bottom: 1rem; font-size: 1.5rem;">🎉 قرعه‌کشی ماهانه سما صنعت 🎉</h2>
-    <p style="color: #fff; margin-bottom: 1.5rem; line-height: 1.6; font-size: 1rem;"> با ثبت نام در سایت ما شانس برنده شدن یک عدد<strong style="color: #f4b400;">صندلی منشی برند نیلپر</strong>را خواهید داشت</p>
-       <form id="raffle-form" style="display: flex; flex-direction: column; gap: 1rem;">
+    <p style="color: #fff; margin-bottom: 1.5rem; line-height: 1.6; font-size: 1rem;">ثبت‌نام کنید و در قرعه‌کشی ماهانه برای برنده شدن <strong style="color: #f4b400;">میز منشی منحنی یک متری</strong> شرکت کنید!</p>
+    
+    <form id="raffle-form" style="display: flex; flex-direction: column; gap: 1rem;">
       <input type="text" id="raffle-name" placeholder="نام و نام خانوادگی" required 
              style="padding: 0.75rem; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff; font-family: Arial; font-size: 16px;">
       <input type="tel" id="raffle-phone" placeholder="شماره تماس" required 
@@ -607,6 +608,36 @@ document.addEventListener('DOMContentLoaded', function() {
       alert('خطا در ثبت‌نام. لطفاً دوباره تلاش کنید.');
     }
   });
+
+  // اضافه کردن دستورات به window برای دسترسی از کنسول
+  window.testTelegramConnection = testTelegramConnection;
+  window.viewParticipants = viewParticipants;
+  window.sendStatsToTelegram = sendStatsToTelegram;
+  window.performRaffle = performRaffle;
+  window.sendCustomMessageToTelegram = sendCustomMessageToTelegram;
+  window.clearRaffleData = clearRaffleData;
+
+  // نمایش دستورات در کنسول
+  console.log(`🚀 **دستورات مدیریت قرعه‌کشی** 🚀
+  
+1. تست اتصال تلگرام:
+   testTelegramConnection()
+
+2. مشاهده لیست شرکت‌کنندگان:
+   viewParticipants()
+
+3. ارسال آمار به تلگرام:
+   sendStatsToTelegram()
+
+4. انجام قرعه‌کشی:
+   performRaffle()
+
+5. ارسال پیام دلخواه به تلگرام:
+   sendCustomMessageToTelegram("پیام شما")
+
+6. پاک کردن اطلاعات قرعه‌کشی:
+   clearRaffleData()
+  `);
 });
 
 // تابع ارسال به تلگرام
@@ -796,16 +827,16 @@ function viewParticipants() {
   }
   
   if (participants.length === 0) {
-    console.log('هیچ شرکت‌کننده‌ای وجود ندارد');
+    console.log('❌ هیچ شرکت‌کننده‌ای وجود ندارد');
     return [];
   }
   
   console.log('📋 لیست شرکت‌کنندگان قرعه‌کشی:');
-  console.log('=' .repeat(50));
+  console.log('='.repeat(60));
   participants.forEach((p, index) => {
-    console.log(`${index + 1}. ${p.name} - ${p.phone} - ${new Date(p.date).toLocaleDateString('fa-IR')}`);
+    console.log(`${(index + 1).toString().padStart(2, '0')}. ${p.name} - ${p.phone} - ${new Date(p.date).toLocaleDateString('fa-IR')}`);
   });
-  console.log('=' .repeat(50));
+  console.log('='.repeat(60));
   console.log(`📊 تعداد کل: ${participants.length} نفر`);
   
   return participants;
@@ -813,6 +844,12 @@ function viewParticipants() {
 
 // تابع پاک کردن اطلاعات قرعه‌کشی
 function clearRaffleData() {
+  const confirmDelete = confirm('⚠️ آیا مطمئن هستید که می‌خواهید تمام اطلاعات قرعه‌کشی را پاک کنید؟');
+  if (!confirmDelete) {
+    console.log('❌ عملیات پاک کردن لغو شد');
+    return false;
+  }
+  
   localStorage.removeItem('raffleParticipants');
   localStorage.removeItem('raffleRegistered');
   console.log('✅ اطلاعات قرعه‌کشی پاک شد');
@@ -822,6 +859,8 @@ function clearRaffleData() {
 
 // تابع تست اتصال تلگرام
 async function testTelegramConnection() {
+  console.log('🔗 در حال تست اتصال به تلگرام...');
+  
   try {
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getMe`;
     const response = await fetch(url);
@@ -845,6 +884,12 @@ async function testTelegramConnection() {
 
 // تابع ارسال پیام دلخواه به تلگرام
 async function sendCustomMessageToTelegram(customMessage) {
+  if (!customMessage || customMessage.trim() === '') {
+    console.error('❌ پیام نمی‌تواند خالی باشد');
+    alert('❌ لطفاً یک پیام وارد کنید');
+    return false;
+  }
+  
   try {
     const message = `📨 **پیام از سیستم قرعه‌کشی** 📨
 
@@ -874,16 +919,27 @@ ${customMessage}
     
     if (result.ok) {
       console.log('✅ پیام دلخواه با موفقیت به تلگرام ارسال شد');
+      alert('✅ پیام با موفقیت به تلگرام ارسال شد');
       return true;
     } else {
       console.error('❌ خطا در ارسال پیام دلخواه به تلگرام:', result);
+      alert('❌ خطا در ارسال پیام به تلگرام');
       return false;
     }
   } catch (error) {
     console.error('❌ خطا در ارسال پیام دلخواه به تلگرام:', error);
+    alert('❌ خطا در ارسال پیام به تلگرام');
     return false;
   }
 }
+
+// اضافه کردن توابع به window برای دسترسی جهانی
+window.testTelegramConnection = testTelegramConnection;
+window.viewParticipants = viewParticipants;
+window.sendStatsToTelegram = sendStatsToTelegram;
+window.performRaffle = performRaffle;
+window.sendCustomMessageToTelegram = sendCustomMessageToTelegram;
+window.clearRaffleData = clearRaffleData;
 </script>
 </body>
 </html>
