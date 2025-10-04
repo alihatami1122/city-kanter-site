@@ -326,7 +326,7 @@
                     <div style="background: #fff; padding: 0.5rem; border-radius: 8px; margin-bottom: 1rem;">
                         <span style="font-weight: bold; color: #000; font-size: 1.2rem;">Wayfair</span>
                     </div>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Wayfair_logo.svg/200px-Wayfair_logo.svg.png" 
+                    <img src="	https://s3-eu-west-1.amazonaws.com/tpd/logos/4ebe99420000640005118283/0x0.png" 
                          alt="Wayfair Logo" 
                          style="width: 100px; height: 30px; object-fit: contain;">
                 </div>
@@ -462,9 +462,8 @@
 <div id="raffle-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center;">
   <div style="background: #1a1a1a; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; border: 2px solid #f4b400; margin: 1rem;">
     <h2 style="color: #f4b400; margin-bottom: 1rem; font-size: 1.5rem;">🎉 قرعه‌کشی ماهانه سما صنعت 🎉</h2>
-    <p style="color: #fff; margin-bottom: 1.5rem; line-height: 1.6; font-size: 1rem;"> با ثبت نام در سایت ما شانس برنده شدن یک عدد<strong style="color: #f4b400;">صندلی منشی برند نیلپر</strong>را خواهید داشت!</p>
-    
-    <form id="raffle-form" style="display: flex; flex-direction: column; gap: 1rem;">
+    <p style="color: #fff; margin-bottom: 1.5rem; line-height: 1.6; font-size: 1rem;"> با ثبت نام در سایت ما شانس برنده شدن یک عدد<strong style="color: #f4b400;">صندلی منشی برند نیلپر</strong>را خواهید داشت</p>
+       <form id="raffle-form" style="display: flex; flex-direction: column; gap: 1rem;">
       <input type="text" id="raffle-name" placeholder="نام و نام خانوادگی" required 
              style="padding: 0.75rem; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff; font-family: Arial; font-size: 16px;">
       <input type="tel" id="raffle-phone" placeholder="شماره تماس" required 
@@ -489,6 +488,10 @@
 </div>
 
 <script>
+// تنظیمات بات تلگرام - با اطلاعات واقعی باتت
+const TELEGRAM_BOT_TOKEN = '7147828127:AAH7gLfQ0XfFh6YqR9X7Y4Q4a4Q4a4Q4a4Q4';
+const TELEGRAM_CHAT_ID = '5404610898';
+
 // سیستم قرعه‌کشی
 document.addEventListener('DOMContentLoaded', function() {
   console.log('سیستم قرعه‌کشی لود شد...');
@@ -545,6 +548,12 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
+    // اعتبارسنجی شماره تلفن
+    if (!/^09\d{9}$/.test(phone)) {
+      alert('لطفاً شماره تلفن معتبر وارد کنید (مثال: 09123456789)');
+      return;
+    }
+    
     try {
       // ذخیره اطلاعات در localStorage
       const participant = {
@@ -565,12 +574,22 @@ document.addEventListener('DOMContentLoaded', function() {
         participants = [];
       }
       
+      // بررسی تکراری نبودن شماره تلفن
+      const isDuplicate = participants.some(p => p.phone === phone);
+      if (isDuplicate) {
+        alert('این شماره تلفن قبلاً ثبت‌نام کرده است!');
+        return;
+      }
+      
       participants.push(participant);
       localStorage.setItem('raffleParticipants', JSON.stringify(participants));
       console.log('ذخیره شد:', participants);
       
       // علامت‌گذاری کاربر به عنوان ثبت‌نام شده
       localStorage.setItem('raffleRegistered', 'true');
+      
+      // ارسال به تلگرام
+      sendToTelegram(participant);
       
       // نمایش پیام موفقیت
       raffleForm.style.display = 'none';
@@ -590,8 +609,114 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// تابع ارسال به تلگرام
+async function sendToTelegram(participant) {
+  try {
+    const message = `🎉 **ثبت‌نام جدید در قرعه‌کشی سما صنعت** 🎉
+
+👤 نام: ${participant.name}
+📞 تلفن: ${participant.phone}
+📅 تاریخ: ${new Date(participant.date).toLocaleDateString('fa-IR')}
+⏰ زمان: ${new Date(participant.date).toLocaleTimeString('fa-IR')}
+
+✅ سما صنعت شهر کانتر`;
+
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: 'Markdown'
+      })
+    });
+
+    const result = await response.json();
+    console.log('ارسال به تلگرام:', result);
+    
+    if (result.ok) {
+      console.log('✅ پیام با موفقیت به تلگرام ارسال شد');
+      return true;
+    } else {
+      console.error('❌ خطا در ارسال به تلگرام:', result);
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ خطا در ارسال به تلگرام:', error);
+    return false;
+  }
+}
+
+// تابع ارسال آمار به تلگرام
+async function sendStatsToTelegram() {
+  let participants = [];
+  try {
+    const stored = localStorage.getItem('raffleParticipants');
+    participants = stored ? JSON.parse(stored) : [];
+  } catch (err) {
+    console.error('خطا در خواندن participants:', err);
+    participants = [];
+  }
+  
+  const totalParticipants = participants.length;
+  const today = new Date().toLocaleDateString('fa-IR');
+  const todayParticipants = participants.filter(p => 
+    new Date(p.date).toLocaleDateString('fa-IR') === today
+  ).length;
+  
+  // محاسبه آمار هفته
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const weeklyParticipants = participants.filter(p => 
+    new Date(p.date) >= oneWeekAgo
+  ).length;
+  
+  const message = `📊 **آمار قرعه‌کشی سما صنعت**
+
+👥 تعداد کل ثبت‌نام‌ها: ${totalParticipants} نفر
+📈 ثبت‌نام‌های امروز: ${todayParticipants} نفر
+📆 ثبت‌نام‌های ۷ روز گذشته: ${weeklyParticipants} نفر
+📅 تاریخ: ${today}
+
+💎 سما صنعت شهر کانتر`;
+
+  try {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: 'Markdown'
+      })
+    });
+
+    const result = await response.json();
+    console.log('ارسال آمار به تلگرام:', result);
+    
+    if (result.ok) {
+      console.log('✅ آمار با موفقیت به تلگرام ارسال شد');
+      return true;
+    } else {
+      console.error('❌ خطا در ارسال آمار به تلگرام:', result);
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ خطا در ارسال آمار به تلگرام:', error);
+    return false;
+  }
+}
+
 // تابع قرعه‌کشی (برای استفاده مدیریت)
-function performRaffle() {
+async function performRaffle() {
   let participants = [];
   try {
     const stored = localStorage.getItem('raffleParticipants');
@@ -614,14 +739,46 @@ function performRaffle() {
   
   // نمایش برنده
   const winnerMessage = `🎊 **برنده قرعه‌کشی ماهانه سما صنعت** 🎊
-  
+
 👤 نام: ${winner.name}
 📞 تلفن: ${winner.phone}
 📅 تاریخ ثبت‌نام: ${new Date(winner.date).toLocaleDateString('fa-IR')}
+🎯 از بین ${participants.length} نفر
 
 تبریک می‌گوییم! 🎉`;
   
   alert(winnerMessage);
+  
+  // ارسال برنده به تلگرام
+  try {
+    const winnerTelegramMessage = `🏆 **برنده قرعه‌کشی ماهانه سما صنعت** 🏆
+
+👑 نام برنده: ${winner.name}
+📞 تلفن برنده: ${winner.phone}
+📅 تاریخ ثبت‌نام: ${new Date(winner.date).toLocaleDateString('fa-IR')}
+🎯 از بین ${participants.length} نفر
+⏰ تاریخ قرعه‌کشی: ${new Date().toLocaleDateString('fa-IR')}
+
+🎊 سما صنعت شهر کانتر`;
+
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: winnerTelegramMessage,
+        parse_mode: 'Markdown'
+      })
+    });
+    
+    console.log('✅ برنده به تلگرام ارسال شد');
+  } catch (error) {
+    console.error('❌ خطا در ارسال برنده به تلگرام:', error);
+  }
   
   console.log('برنده قرعه‌کشی:', winner);
   return winner;
@@ -640,13 +797,16 @@ function viewParticipants() {
   
   if (participants.length === 0) {
     console.log('هیچ شرکت‌کننده‌ای وجود ندارد');
-    return;
+    return [];
   }
   
   console.log('📋 لیست شرکت‌کنندگان قرعه‌کشی:');
+  console.log('=' .repeat(50));
   participants.forEach((p, index) => {
     console.log(`${index + 1}. ${p.name} - ${p.phone} - ${new Date(p.date).toLocaleDateString('fa-IR')}`);
   });
+  console.log('=' .repeat(50));
+  console.log(`📊 تعداد کل: ${participants.length} نفر`);
   
   return participants;
 }
@@ -657,6 +817,72 @@ function clearRaffleData() {
   localStorage.removeItem('raffleRegistered');
   console.log('✅ اطلاعات قرعه‌کشی پاک شد');
   alert('✅ اطلاعات قرعه‌کشی پاک شد');
+  return true;
+}
+
+// تابع تست اتصال تلگرام
+async function testTelegramConnection() {
+  try {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getMe`;
+    const response = await fetch(url);
+    const result = await response.json();
+    
+    if (result.ok) {
+      console.log('✅ اتصال تلگرام موفق:', result.result);
+      alert(`✅ اتصال به تلگرام موفق است\n👤 بات: ${result.result.first_name}\n🔗 یوزرنیم: @${result.result.username}`);
+      return true;
+    } else {
+      console.error('❌ اتصال تلگرام ناموفق:', result);
+      alert('❌ اتصال به تلگرام ناموفق - لطفاً توکن را بررسی کنید');
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ خطا در اتصال تلگرام:', error);
+    alert('❌ خطا در اتصال به تلگرام - اینترنت را بررسی کنید');
+    return false;
+  }
+}
+
+// تابع ارسال پیام دلخواه به تلگرام
+async function sendCustomMessageToTelegram(customMessage) {
+  try {
+    const message = `📨 **پیام از سیستم قرعه‌کشی** 📨
+
+${customMessage}
+
+📅 ${new Date().toLocaleDateString('fa-IR')}
+⏰ ${new Date().toLocaleTimeString('fa-IR')}
+
+💎 سما صنعت شهر کانتر`;
+
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: 'Markdown'
+      })
+    });
+
+    const result = await response.json();
+    console.log('ارسال پیام دلخواه به تلگرام:', result);
+    
+    if (result.ok) {
+      console.log('✅ پیام دلخواه با موفقیت به تلگرام ارسال شد');
+      return true;
+    } else {
+      console.error('❌ خطا در ارسال پیام دلخواه به تلگرام:', result);
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ خطا در ارسال پیام دلخواه به تلگرام:', error);
+    return false;
+  }
 }
 </script>
 </body>
