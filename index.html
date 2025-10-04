@@ -455,33 +455,35 @@
       gtag('config', 'G-276H299Y8P');
     });
   </script>
-  <!-- سیستم قرعه‌کشی ماهانه -->
-<div id="raffle-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-  <div style="background: #1a1a1a; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; border: 2px solid #f4b400;">
-    <h2 style="color: #f4b400; margin-bottom: 1rem;">🎉 قرعه‌کشی ماهانه سما صنعت 🎉</h2>
-    <p style="color: #fff; margin-bottom: 1.5rem; line-height: 1.6;">با ثبت نام در سایت ما شانس برنده شدن یک عدد  <strong style="color: #f4b400;">صندلی منشی برند نیلپر</strong> را  خواهید داشت </p>
-        <form id="raffle-form" style="display: flex; flex-direction: column; gap: 1rem;">
+  <!-- لینک به فایل JavaScript خارجی -->
+<script src="script.js" defer></script>
+
+<!-- سیستم قرعه‌کشی ماهانه -->
+<div id="raffle-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center;">
+  <div style="background: #1a1a1a; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; border: 2px solid #f4b400; margin: 1rem;">
+    <h2 style="color: #f4b400; margin-bottom: 1rem; font-size: 1.5rem;">🎉 قرعه‌کشی ماهانه سما صنعت 🎉</h2>
+    <p style="color: #fff; margin-bottom: 1.5rem; line-height: 1.6; font-size: 1rem;">ثبت‌نام کنید و در قرعه‌کشی ماهانه برای برنده شدن <strong style="color: #f4b400;">میز منشی منحنی یک متری</strong> شرکت کنید!</p>
+    
+    <form id="raffle-form" style="display: flex; flex-direction: column; gap: 1rem;">
       <input type="text" id="raffle-name" placeholder="نام و نام خانوادگی" required 
-             style="padding: 0.75rem; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff; font-family: inherit;">
-      <input type="email" id="raffle-email" placeholder="ایمیل" required 
-             style="padding: 0.75rem; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff; font-family: inherit;">
+             style="padding: 0.75rem; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff; font-family: Arial; font-size: 16px;">
       <input type="tel" id="raffle-phone" placeholder="شماره تماس" required 
-             style="padding: 0.75rem; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff; font-family: inherit;">
+             style="padding: 0.75rem; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff; font-family: Arial; font-size: 16px;">
       
       <div style="display: flex; gap: 0.5rem;">
         <button type="submit" 
-                style="flex: 1; padding: 0.75rem; background: #f4b400; color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: inherit;">
+                style="flex: 1; padding: 0.75rem; background: #f4b400; color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: Arial; font-size: 16px;">
           ثبت‌نام در قرعه‌کشی
         </button>
         <button type="button" id="close-raffle" 
-                style="padding: 0.75rem 1rem; background: #555; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-family: inherit;">
+                style="padding: 0.75rem 1rem; background: #555; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-family: Arial; font-size: 16px;">
           بستن
         </button>
       </div>
     </form>
     
     <div id="raffle-success" style="display: none; color: #25D366; margin-top: 1rem; padding: 1rem; background: rgba(37, 211, 102, 0.1); border-radius: 6px;">
-      <p style="margin: 0;">✅ ثبت‌نام شما با موفقیت انجام شد! در قرعه‌کشی ماه آینده شرکت داده خواهید شد.</p>
+      <p style="margin: 0; font-size: 1rem;">✅ ثبت‌نام شما با موفقیت انجام شد! در قرعه‌کشی ماه آینده شرکت داده خواهید شد.</p>
     </div>
   </div>
 </div>
@@ -489,29 +491,40 @@
 <script>
 // سیستم قرعه‌کشی
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('سیستم قرعه‌کشی لود شد...');
+  
   const raffleModal = document.getElementById('raffle-modal');
   const raffleForm = document.getElementById('raffle-form');
   const closeRaffle = document.getElementById('close-raffle');
   const raffleSuccess = document.getElementById('raffle-success');
   
+  if (!raffleModal) {
+    console.error('عنصر raffle-modal پیدا نشد!');
+    return;
+  }
+  
   // بررسی آیا کاربر قبلاً ثبت‌نام کرده
   const hasRegistered = localStorage.getItem('raffleRegistered');
+  console.log('کاربر ثبت‌نام کرده:', hasRegistered);
   
-  // اگر قبلاً ثبت‌نام نکرده و 5 ثانیه از لود سایت گذشته، نمایش مدال
+  // اگر قبلاً ثبت‌نام نکرده، نمایش مدال
   if (!hasRegistered) {
     setTimeout(() => {
+      console.log('نمایش خودکار مدال...');
       raffleModal.style.display = 'flex';
-    }, 5000);
+    }, 3000);
   }
   
   // بستن مدال
   closeRaffle.addEventListener('click', function() {
+    console.log('بستن مدال...');
     raffleModal.style.display = 'none';
   });
   
   // کلیک خارج از مدال برای بستن
   raffleModal.addEventListener('click', function(e) {
     if (e.target === raffleModal) {
+      console.log('کلیک خارج از مدال...');
       raffleModal.style.display = 'none';
     }
   });
@@ -519,48 +532,76 @@ document.addEventListener('DOMContentLoaded', function() {
   // مدیریت فرم ثبت‌نام
   raffleForm.addEventListener('submit', function(e) {
     e.preventDefault();
+    console.log('فرم ارسال شد...');
     
     const name = document.getElementById('raffle-name').value.trim();
-    const email = document.getElementById('raffle-email').value.trim();
     const phone = document.getElementById('raffle-phone').value.trim();
     
+    console.log('داده‌های فرم:', {name, phone});
+    
     // اعتبارسنجی
-    if (!name || !email || !phone) {
+    if (!name || !phone) {
       alert('لطفاً همه فیلدها را پر کنید');
       return;
     }
     
-    // ذخیره اطلاعات در localStorage
-    const participant = {
-      name: name,
-      email: email,
-      phone: phone,
-      date: new Date().toISOString(),
-      timestamp: Date.now()
-    };
-    
-    // دریافت لیست موجود یا ایجاد لیست جدید
-    let participants = JSON.parse(localStorage.getItem('raffleParticipants')) || [];
-    participants.push(participant);
-    localStorage.setItem('raffleParticipants', JSON.stringify(participants));
-    
-    // علامت‌گذاری کاربر به عنوان ثبت‌نام شده
-    localStorage.setItem('raffleRegistered', 'true');
-    
-    // نمایش پیام موفقیت
-    raffleForm.style.display = 'none';
-    raffleSuccess.style.display = 'block';
-    
-    // بستن خودکار بعد از 3 ثانیه
-    setTimeout(() => {
-      raffleModal.style.display = 'none';
-    }, 3000);
+    try {
+      // ذخیره اطلاعات در localStorage
+      const participant = {
+        name: name,
+        phone: phone,
+        date: new Date().toISOString(),
+        timestamp: Date.now()
+      };
+      
+      // دریافت لیست موجود یا ایجاد لیست جدید
+      let participants = [];
+      try {
+        const stored = localStorage.getItem('raffleParticipants');
+        participants = stored ? JSON.parse(stored) : [];
+        console.log('لیست موجود:', participants);
+      } catch (err) {
+        console.log('خطا در خواندن localStorage، ایجاد لیست جدید');
+        participants = [];
+      }
+      
+      participants.push(participant);
+      localStorage.setItem('raffleParticipants', JSON.stringify(participants));
+      console.log('ذخیره شد:', participants);
+      
+      // علامت‌گذاری کاربر به عنوان ثبت‌نام شده
+      localStorage.setItem('raffleRegistered', 'true');
+      
+      // نمایش پیام موفقیت
+      raffleForm.style.display = 'none';
+      raffleSuccess.style.display = 'block';
+      
+      console.log('ثبت‌نام موفقیت‌آمیز بود');
+      
+      // بستن خودکار بعد از 3 ثانیه
+      setTimeout(() => {
+        raffleModal.style.display = 'none';
+      }, 3000);
+      
+    } catch (error) {
+      console.error('خطا در ذخیره‌سازی:', error);
+      alert('خطا در ثبت‌نام. لطفاً دوباره تلاش کنید.');
+    }
   });
 });
 
 // تابع قرعه‌کشی (برای استفاده مدیریت)
 function performRaffle() {
-  const participants = JSON.parse(localStorage.getItem('raffleParticipants')) || [];
+  let participants = [];
+  try {
+    const stored = localStorage.getItem('raffleParticipants');
+    participants = stored ? JSON.parse(stored) : [];
+  } catch (err) {
+    console.error('خطا در خواندن participants:', err);
+    participants = [];
+  }
+  
+  console.log('تعداد شرکت‌کنندگان:', participants.length);
   
   if (participants.length === 0) {
     alert('❌ هیچ شرکت‌کننده‌ای برای قرعه‌کشی وجود ندارد!');
@@ -575,7 +616,6 @@ function performRaffle() {
   const winnerMessage = `🎊 **برنده قرعه‌کشی ماهانه سما صنعت** 🎊
   
 👤 نام: ${winner.name}
-📧 ایمیل: ${winner.email}
 📞 تلفن: ${winner.phone}
 📅 تاریخ ثبت‌نام: ${new Date(winner.date).toLocaleDateString('fa-IR')}
 
@@ -583,17 +623,20 @@ function performRaffle() {
   
   alert(winnerMessage);
   
-  // پاک کردن لیست برای ماه بعد (اختیاری)
-  // localStorage.removeItem('raffleParticipants');
-  // localStorage.removeItem('raffleRegistered');
-  
   console.log('برنده قرعه‌کشی:', winner);
   return winner;
 }
 
 // تابع مشاهده لیست شرکت‌کنندگان
 function viewParticipants() {
-  const participants = JSON.parse(localStorage.getItem('raffleParticipants')) || [];
+  let participants = [];
+  try {
+    const stored = localStorage.getItem('raffleParticipants');
+    participants = stored ? JSON.parse(stored) : [];
+  } catch (err) {
+    console.error('خطا در خواندن participants:', err);
+    participants = [];
+  }
   
   if (participants.length === 0) {
     console.log('هیچ شرکت‌کننده‌ای وجود ندارد');
@@ -604,6 +647,16 @@ function viewParticipants() {
   participants.forEach((p, index) => {
     console.log(`${index + 1}. ${p.name} - ${p.phone} - ${new Date(p.date).toLocaleDateString('fa-IR')}`);
   });
+  
+  return participants;
+}
+
+// تابع پاک کردن اطلاعات قرعه‌کشی
+function clearRaffleData() {
+  localStorage.removeItem('raffleParticipants');
+  localStorage.removeItem('raffleRegistered');
+  console.log('✅ اطلاعات قرعه‌کشی پاک شد');
+  alert('✅ اطلاعات قرعه‌کشی پاک شد');
 }
 </script>
 </body>
